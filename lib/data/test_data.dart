@@ -23,9 +23,11 @@ SidLineData getSidData(String sidId) {
   SidPointData ca580data = SidPointData(ca580point, true, "CA_POINT");
   SidPointData ka019data = SidPointData(KA019_URKA, true, "POINT");
   SidPointData dibat = SidPointData(DIBAT_UR, true, "END_POINT");
+  SidPointData paler = SidPointData(PALER_UR, true, "END_POINT");
+  SidPointData arnad = SidPointData(ARNAD_UR, true, "END_POINT");
 
   SidLineData dibat1F =
-      SidLineData(start, 215 + 7, [ca580data, ka019data, dibat]);
+      SidLineData(start, 215 + 7, [ca580data, ka019data, dibat, arnad, paler]);
 
   return dibat1F;
 }

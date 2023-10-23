@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:sidmap/data/arc_data.dart';
 import '../helpers/arc_helpers.dart';
 
 const Haversine _haversine = Haversine();
@@ -11,7 +12,7 @@ const Haversine _haversine = Haversine();
 // радиус разворота (meters),
 // выходной курс  (истинный, 0..360),
 // направление (по часовой - true).
-List<Polyline> getTurnArc(LatLng startPoint, double currentCourse, double turnRadius,
+ArcData getTurnArc(LatLng startPoint, double currentCourse, double turnRadius,
     double exitCourse, bool isClockWise) {
 
   double courseL = turnToLeft90(currentCourse);
@@ -42,30 +43,18 @@ List<Polyline> getTurnArc(LatLng startPoint, double currentCourse, double turnRa
   return getSimpleArc(arcCenter, turnRadius, arcStartAngle, arcEndAngle, isClockWise);
 }
 
-/// Заглушка для тестов
-/// not in use
-List<Polyline> getTestArc(LatLng startPoint, double currentCourse) {
-  double courseL = turnToLeft90(currentCourse);
-  double courseR = turnToRight90(currentCourse);
 
-  double turnRadius = 1500.0;
-
-  LatLng arcCenterL = const Haversine().offset(startPoint, turnRadius, bearingFromCourse(courseL));
-
-  return getSimpleArc(arcCenterL, turnRadius, courseR, courseL, false);
-}
-
-
-// возвращает Polyline в виде дуги c:
+// возвращает ArcData в виде дуги c:
 // центром в center
 // радиусом radius
 // началом на startAngle концом на endAngle ( 0...360 )
 // clockWise - по часовой стрелке
-    List<Polyline> getSimpleArc(LatLng center, double radius, double startAngle,
-        double endAngle, bool clockWise) {
+// и выходной точки дуги
+    ArcData getSimpleArc(LatLng center, double radius, double startAngle,
+        double endAngle, bool isClockwise) {
       List<LatLng> arcPoints = []; // точки дуги
 
-      if (!clockWise) {
+      if (!isClockwise) {
         double temp = startAngle;
         startAngle = endAngle;
         endAngle = temp;
@@ -93,7 +82,8 @@ List<Polyline> getTestArc(LatLng startPoint, double currentCourse) {
         strokeWidth: 5,
       );
 
-      return [arc];
+      LatLng last = isClockwise ? endPoint : startPoint;
+      return ArcData(arc, last);
     }
 
     List<LatLng> getCwArcPoints(
