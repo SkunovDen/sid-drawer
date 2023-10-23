@@ -27,7 +27,7 @@ List<Polyline> getSidDraw(SidLineData sidLineData) {
     currentLinePoint = sidPoint.point;
     currentCourse = courseToNext;
 
-    result.addAll(transitionPolyline);
+    result.add(transitionPolyline);
   }
 
   return result;
