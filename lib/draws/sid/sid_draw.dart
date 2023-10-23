@@ -11,6 +11,7 @@ List<Polyline> getSidDraw(SidLineData sidLineData) {
   LatLng currentLinePoint = startPoint;
   double currentCourse = sidLineData.startCourse;
 
+  // проходимся по всм точкам в SidLineData
   for (var sidPoint in sidLineData.sidPoints) {
     double courseToNext = courseBetween(currentLinePoint, sidPoint.point);
     double turnAngle = (currentCourse - courseToNext).abs();
@@ -26,7 +27,7 @@ List<Polyline> getSidDraw(SidLineData sidLineData) {
     currentLinePoint = sidPoint.point;
     currentCourse = courseToNext;
 
-    result.add(transitionPolyline);
+    result.addAll(transitionPolyline);
   }
 
   return result;
