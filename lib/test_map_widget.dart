@@ -18,7 +18,7 @@ class TestMapWidget extends StatelessWidget {
 
     List<Polyline> polylinesList = [];
 
-    polylinesList.add(urkaRw);
+    polylinesList.add(getRw(urkaRw04Thr, urkaRw22Thr));
 
 
 /// Testing functional ///
