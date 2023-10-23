@@ -8,7 +8,6 @@ import 'package:sidmap/data/test_data.dart';
 import 'package:sidmap/draws/sid/sid_draw.dart';
 
 import './draws/runway/draw_runway.dart';
-import './draws/sid/sid_draw.dart';
 
 class TestMapWidget extends StatelessWidget {
   const TestMapWidget({super.key});
