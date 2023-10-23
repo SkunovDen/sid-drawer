@@ -30,6 +30,8 @@ List<Polyline> getSidDraw(SidLineData sidLineData) {
           courseToNext, false);
 
 
+
+
       Polyline transitionPolylineL = Polyline(
         points: [currentLinePoint, sidPoint.point],
         color: Colors.green,
