@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './urka_test_map_widget.dart';
+import './test_map_widget.dart';
 
 void main() {
   runApp(const MyApp());
@@ -50,8 +50,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   Padding(
                       padding: EdgeInsets.all(16.0),
-                      child: UrkaDibat1FMapWidget()),
-                ]),
+                      child: TestMapWidget()),
+                ])
           ],
         ),
       ),
