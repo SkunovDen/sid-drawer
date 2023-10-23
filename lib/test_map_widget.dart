@@ -3,10 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:sidmap/data/sid_line_data.dart';
+import 'package:sidmap/data/test_data.dart';
+import 'package:sidmap/draws/sid/sid_draw.dart';
 
 import './draws/runway/draw_runway.dart';
-
-import '/draws/arc/arc.dart';
+import './draws/sid/sid_draw.dart';
 
 class TestMapWidget extends StatelessWidget {
   const TestMapWidget({super.key});
@@ -20,23 +22,15 @@ class TestMapWidget extends StatelessWidget {
 
     polylinesList.add(getRw(urkaRw04Thr, urkaRw22Thr));
 
-
-/// Testing functional ///
+    /// Testing functional ///
 
     void addTestDraw() {
-      // точка входа в дугу = urkaRw04Thr
-      double currentCourse = 35 + 7; // Rw + MagVar
-      double turnRadius = 2000.0; // meters
-      double exitCourse = 270 + 7; // To West + MagVar
-      bool isClockWise = false; // против часовой
+      SidLineData dibat1f = getSidData('DIBAT_1F');
 
-
-      polylinesList.addAll(
-          getTurnArc(urkaRw04Thr, currentCourse, turnRadius, exitCourse, isClockWise));
+      polylinesList.addAll(getSidDraw(dibat1f));
     }
 
-/// Testing functional
-
+    /// Testing functional
 
     return Row(
       mainAxisSize: MainAxisSize.max,
@@ -50,7 +44,7 @@ class TestMapWidget extends StatelessWidget {
               // ignore: deprecated_member_use
               center: LatLng(45.012, 37.355),
               // ignore: deprecated_member_use
-              zoom: 12.5,
+              zoom: 8.5,
             ),
             children: [
               TileLayer(
