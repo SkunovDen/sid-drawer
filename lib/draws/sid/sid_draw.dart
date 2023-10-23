@@ -26,7 +26,7 @@ List<Polyline> getSidDraw(SidLineData sidLineData) {
       bool isClockWise = turnAngle < 0;
 
       // TODO рассчитать ?
-      double turnRadius = 3500.0;
+      double turnRadius = 1500.0;
 
       ArcData arcData = getTurnArc(
           currentLinePoint, currentCourse,

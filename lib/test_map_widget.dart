@@ -24,7 +24,7 @@ class TestMapWidget extends StatelessWidget {
     /// Testing functional ///
 
     void addTestDraw() {
-      SidLineData dibat1f = getSidData('DIBAT_1F');
+      SidLineData dibat1f = getArnadSidData('DIBAT_1F');
 
       polylinesList.addAll(getSidDraw(dibat1f));
     }
