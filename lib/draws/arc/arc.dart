@@ -1,10 +1,42 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:sidmap/data/arc_data.dart';
+import 'package:sidmap/draws/arc/arcPoint.dart';
 import '../helpers/arc_helpers.dart';
 
 const Haversine _haversine = Haversine();
+
+List<LatLng> arcFromPointToCourse(
+    ArcPoint startPoint, double radius, bool isClockWise, double endCourse) {
+  List<LatLng> arcPoints = [];
+
+  if (isClockWise) {
+    double startCourse = startPoint.trueCourse;
+
+    // находим центр
+    double toCenterCourse = turnToRight90(startCourse);
+    final LatLng center = _haversine.offset(
+        startPoint.coordinates, radius, normalizeBearing(toCenterCourse));
+    // arcPoints.add(startPoint.coordinates);
+
+    // наращивая курс до достижения endCourse собираем точки дуги
+    double currentArcCourse = 0;
+    double arcDegrees = endCourse - startCourse;
+
+    while (currentArcCourse < arcDegrees) {
+      log('Current course: $currentArcCourse');
+      LatLng arcPoint = _haversine.offset(center, radius, currentArcCourse);
+      arcPoints.add(arcPoint);
+
+      currentArcCourse += 1;
+    }
+  } else {}
+
+  return arcPoints;
+}
 
 // Возвращает дугу, постороенную по:
 // входная точка (LatLng),
@@ -14,7 +46,6 @@ const Haversine _haversine = Haversine();
 // направление (по часовой - true).
 ArcData getTurnArc(LatLng startPoint, double currentCourse, double turnRadius,
     double exitCourse, bool isClockWise) {
-
   double courseL = turnToLeft90(currentCourse);
   double courseR = turnToRight90(currentCourse);
 
@@ -22,27 +53,24 @@ ArcData getTurnArc(LatLng startPoint, double currentCourse, double turnRadius,
   late double arcStartAngle;
   late double arcEndAngle;
 
-  if(isClockWise){
-
+  if (isClockWise) {
     courseToCenter = courseR;
     arcStartAngle = courseL;
     //
     arcEndAngle = turnToLeft90(exitCourse);
-
-
   } else {
     courseToCenter = courseL;
     arcStartAngle = courseR;
     //
     arcEndAngle = turnToRight90(exitCourse);
-
   }
 
-  LatLng arcCenter = const Haversine().offset(startPoint, turnRadius, bearingFromCourse(courseToCenter));
+  LatLng arcCenter = const Haversine()
+      .offset(startPoint, turnRadius, bearingFromCourse(courseToCenter));
 
-  return getSimpleArc(arcCenter, turnRadius, arcStartAngle, arcEndAngle, isClockWise);
+  return getSimpleArc(
+      arcCenter, turnRadius, arcStartAngle, arcEndAngle, isClockWise);
 }
-
 
 // возвращает ArcData в виде дуги c:
 // центром в center
@@ -50,64 +78,63 @@ ArcData getTurnArc(LatLng startPoint, double currentCourse, double turnRadius,
 // началом на startAngle концом на endAngle ( 0...360 )
 // clockWise - по часовой стрелке
 // и выходной точки дуги
-    ArcData getSimpleArc(LatLng center, double radius, double startAngle,
-        double endAngle, bool isClockwise) {
-      List<LatLng> arcPoints = []; // точки дуги
+ArcData getSimpleArc(LatLng center, double radius, double startAngle,
+    double endAngle, bool isClockwise) {
+  List<LatLng> arcPoints = []; // точки дуги
 
-      if (!isClockwise) {
-        double temp = startAngle;
-        startAngle = endAngle;
-        endAngle = temp;
-      }
+  if (!isClockwise) {
+    double temp = startAngle;
+    startAngle = endAngle;
+    endAngle = temp;
+  }
 
-      LatLng startPoint =
+  LatLng startPoint =
       _haversine.offset(center, radius, bearingFromCourse(startAngle));
-      LatLng endPoint =
+  LatLng endPoint =
       _haversine.offset(center, radius, bearingFromCourse(endAngle));
 
-      arcPoints.add(startPoint);
+  arcPoints.add(startPoint);
 
-      if (startAngle < endAngle) {
-        arcPoints.addAll(getCwArcPoints(center, radius, startAngle, endAngle));
-      } else {
-        arcPoints.addAll(getCwArcPoints(center, radius, startAngle, 360.0));
-        arcPoints.addAll(getCwArcPoints(center, radius, 0.0, endAngle));
-      }
+  if (startAngle < endAngle) {
+    arcPoints.addAll(getCwArcPoints(center, radius, startAngle, endAngle));
+  } else {
+    arcPoints.addAll(getCwArcPoints(center, radius, startAngle, 360.0));
+    arcPoints.addAll(getCwArcPoints(center, radius, 0.0, endAngle));
+  }
 
-      arcPoints.add(endPoint);
+  arcPoints.add(endPoint);
 
-      Polyline arc = Polyline(
-        points: arcPoints,
-        color: Colors.green,
-        strokeWidth: 5,
-      );
+  Polyline arc = Polyline(
+    points: arcPoints,
+    color: Colors.green,
+    strokeWidth: 5,
+  );
 
-      LatLng last = isClockwise ? endPoint : startPoint;
-      return ArcData(arc, last);
-    }
+  LatLng last = isClockwise ? endPoint : startPoint;
+  return ArcData(arc, last);
+}
 
-    List<LatLng> getCwArcPoints(
-        LatLng center, double radius, double startAngle, double endAngle) {
-      List<LatLng> arcPoints = [];
-      LatLng startPoint =
+List<LatLng> getCwArcPoints(
+    LatLng center, double radius, double startAngle, double endAngle) {
+  List<LatLng> arcPoints = [];
+  LatLng startPoint =
       _haversine.offset(center, radius, bearingFromCourse(startAngle));
-      LatLng endPoint =
+  LatLng endPoint =
       _haversine.offset(center, radius, bearingFromCourse(endAngle));
-      arcPoints.add(startPoint);
+  arcPoints.add(startPoint);
 
-      double sectorAngle = 8;
+  double sectorAngle = 8;
 
-      double arcPointAngle = startAngle;
-      while (arcPointAngle < endAngle - sectorAngle) {
-        arcPointAngle += sectorAngle;
+  double arcPointAngle = startAngle;
+  while (arcPointAngle < endAngle - sectorAngle) {
+    arcPointAngle += sectorAngle;
 
-        LatLng point =
+    LatLng point =
         _haversine.offset(center, radius, bearingFromCourse(arcPointAngle));
 
-        arcPoints.add(point);
-      }
+    arcPoints.add(point);
+  }
 
-      arcPoints.add(endPoint);
-      return arcPoints;
-    }
-
+  arcPoints.add(endPoint);
+  return arcPoints;
+}

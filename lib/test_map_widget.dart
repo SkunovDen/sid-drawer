@@ -5,9 +5,11 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:sidmap/data/sid_line_data.dart';
 import 'package:sidmap/data/test_data.dart';
+import 'package:sidmap/draws/arc/arcPoint.dart';
 import 'package:sidmap/draws/sid/sid_draw.dart';
 
 import './draws/runway/draw_runway.dart';
+import 'draws/arc/arc.dart';
 
 class TestMapWidget extends StatelessWidget {
   const TestMapWidget({super.key});
@@ -24,9 +26,31 @@ class TestMapWidget extends StatelessWidget {
     /// Testing functional ///
 
     void addTestDraw() {
-      SidLineData dibat1f = getArnadSidData('DIBAT_1F');
+      const LatLng arcStartPoint = LatLng(45, 38);
+      final double arcStartCourse = 10;
+      final double arcEndCourse = 130;
+      final double arcRadius = 4000;
 
-      polylinesList.addAll(getSidDraw(dibat1f));
+      final ArcPoint start =
+          ArcPoint(coordinates: arcStartPoint, trueCourse: arcStartCourse);
+
+      List<LatLng> arcPoints = arcFromPointToCourse(start, 4000, true, arcEndCourse);
+      Polyline arc = Polyline(
+          points: arcPoints,
+          color: Colors.blue,
+          strokeWidth: 5);
+
+      Polyline startLine = Polyline(
+          points: [const LatLng(45, 37), arcStartPoint],
+          color: Colors.green,
+          strokeWidth: 5);
+
+      Polyline engLine = Polyline(
+          points: [const LatLng(45.1, 37.7), const LatLng(45.5, 37.7)],
+          color: Colors.green,
+          strokeWidth: 5);
+
+      polylinesList.addAll([startLine, arc]);
     }
 
     /// Testing functional
