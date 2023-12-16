@@ -1,39 +1,54 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:sidmap/data/arc_data.dart';
-import 'package:sidmap/draws/arc/arcPoint.dart';
+
 import '../helpers/arc_helpers.dart';
 
 const Haversine _haversine = Haversine();
 
 List<LatLng> arcFromPointToCourse(
-    ArcPoint startPoint, double radius, bool isClockWise, double endCourse) {
+    {required LatLng startPoint,
+    required double startCourse,
+    required double radius,
+    required bool isClockWise,
+    required double endCourse}) {
   List<LatLng> arcPoints = [];
 
   if (isClockWise) {
-    double startCourse = startPoint.trueCourse;
-
     // находим центр
     double toCenterCourse = turnToRight90(startCourse);
+    double bearingToCenter = bearingFromCourse(toCenterCourse);
+
     final LatLng center = _haversine.offset(
-        startPoint.coordinates, radius, normalizeBearing(toCenterCourse));
-    // arcPoints.add(startPoint.coordinates);
+        startPoint, radius, bearingToCenter);
 
-    // наращивая курс до достижения endCourse собираем точки дуги
-    double currentArcCourse = 0;
-    double arcDegrees = endCourse - startCourse;
+    // arcPoints.add(startPoint);
+    // arcPoints.add(center);
 
-    while (currentArcCourse < arcDegrees) {
-      log('Current course: $currentArcCourse');
-      LatLng arcPoint = _haversine.offset(center, radius, currentArcCourse);
-      arcPoints.add(arcPoint);
 
-      currentArcCourse += 1;
-    }
-  } else {}
+    List<LatLng> points = getTurnArc(startPoint, startCourse, radius, endCourse, isClockWise).arc.points;
+
+    arcPoints.addAll(points);
+
+
+  } else {
+    // находим центр
+    double toCenterCourse = turnToLeft90(startCourse);
+    double bearingToCenter = bearingFromCourse(toCenterCourse);
+    debugPrint('toCenterCourse $toCenterCourse');
+    debugPrint('bearingToCenter $bearingToCenter');
+    final LatLng center = _haversine.offset(
+        startPoint, radius, bearingToCenter);
+
+    arcPoints.add(startPoint);
+    arcPoints.add(center);
+  }
+
+
+
+
+
 
   return arcPoints;
 }
