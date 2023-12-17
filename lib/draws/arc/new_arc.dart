@@ -140,25 +140,23 @@ class Arc {
 
     // CW
     /// пеленг на стартовую точку
-    /// пеленг на конечную точку
     double arcStartCourseFromCenter = _turnToLeft90(startCourse);
-    double arcOutCourseFromCenter = _turnToLeft90(startCourse);
 
     // CW
-    // наращиваем  курс до совпадения с конечным
+    // наращиваем курс до совпадения с курсом на заданую точку
     // собираем точки дуги:
     double currentArcPointCourseFromCenter = arcStartCourseFromCenter;
     double c = 0;
-    do {
-      currentArcPointCourseFromCenter += 1;
-      c = currentArcPointCourseFromCenter > 360
-          ? currentArcPointCourseFromCenter - 360
-          : currentArcPointCourseFromCenter;
-
-      LatLng point =
-      _haversine.offset(center, radius, _bearingFromCourse(c));
-      arcPoints.add(point);
-    } while ((c - arcOutCourseFromCenter).abs() > 1);
+    // do {
+    //   currentArcPointCourseFromCenter += 1;
+    //   c = currentArcPointCourseFromCenter > 360
+    //       ? currentArcPointCourseFromCenter - 360
+    //       : currentArcPointCourseFromCenter;
+    //
+    //   LatLng point =
+    //   _haversine.offset(center, radius, _bearingFromCourse(c));
+    //   arcPoints.add(point);
+    // } while ((c - arcOutCourseFromCenter).abs() > 1);
 
     return arcPoints;
   }
@@ -180,23 +178,22 @@ class Arc {
     /// пеленг на стартовую точку
     /// пеленг на конечную точку
     double arcStartCourseFromCenter = _turnToRight90(startCourse);
-    double arcOutCourseFromCenter = _turnToRight90(startCourse);
 
     // CW
     // уменьшаем  курс до совпадения с конечным
     // собираем точки дуги:
     double currentArcPointCourseFromCenter = arcStartCourseFromCenter;
     double c = 0;
-    do {
-      currentArcPointCourseFromCenter -= 1;
-      c = currentArcPointCourseFromCenter < 0
-          ? currentArcPointCourseFromCenter + 360
-          : currentArcPointCourseFromCenter;
-
-      LatLng point =
-      _haversine.offset(center, radius, _bearingFromCourse(c));
-      arcPoints.add(point);
-    } while ((c - arcOutCourseFromCenter).abs() > 1);
+    // do {
+    //   currentArcPointCourseFromCenter -= 1;
+    //   c = currentArcPointCourseFromCenter < 0
+    //       ? currentArcPointCourseFromCenter + 360
+    //       : currentArcPointCourseFromCenter;
+    //
+    //   LatLng point =
+    //   _haversine.offset(center, radius, _bearingFromCourse(c));
+    //   arcPoints.add(point);
+    // } while ((c - arcOutCourseFromCenter).abs() > 1);
 
     return arcPoints;
   }
