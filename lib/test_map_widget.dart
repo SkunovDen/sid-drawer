@@ -26,8 +26,8 @@ class TestMapWidget extends StatelessWidget {
       final double arcStartCourse = 90;
       final double arcEndCourse = 318;
       final double arcRadius = 4000;
-      final bool clockWise = true;
-      const LatLng sPoint = LatLng(45.8, 39.9);
+      final bool clockWise = false;
+      const LatLng sPoint = LatLng(45.8, 37);
 
 
       final List<LatLng> newArc2 = Arc().fromPointToCourseToPoint(

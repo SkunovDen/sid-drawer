@@ -177,6 +177,9 @@ class Arc {
     required LatLng outCoursePoint,
     required double radius,
   }) {
+    dev.log(
+        name: '[ fromPointToCourseToPoint ]',
+        'create CCW Arc from $startPoint to course $outCoursePoint');
     List<LatLng> arcPoints = [];
 
     // находим центр дуги
@@ -184,29 +187,38 @@ class Arc {
     LatLng center = _haversine.offset(
         startPoint, radius, _bearingFromCourse(courseToCenter));
 
-    // CCW
-    /// пеленг на стартовую точку
-    /// пеленг на конечную точку
-    double arcStartCourseFromCenter = _turnToRight90(startCourse);
+    return [startPoint,center];
 
     // CW
-    // уменьшаем  курс до совпадения с конечным
+    /// пеленг на стартовую точку
+    double arcStartCourseFromCenter = _turnToLeft90(startCourse);
+
+    // CW
+    // наращиваем курс до совпадения с курсом на заданую точку
     // собираем точки дуги:
     double currentArcPointCourseFromCenter = arcStartCourseFromCenter;
     double c = 0;
-    // do {
-    //   currentArcPointCourseFromCenter -= 1;
-    //   c = currentArcPointCourseFromCenter < 0
-    //       ? currentArcPointCourseFromCenter + 360
-    //       : currentArcPointCourseFromCenter;
-    //
-    //   LatLng point =
-    //   _haversine.offset(center, radius, _bearingFromCourse(c));
-    //   arcPoints.add(point);
-    // } while ((c - arcOutCourseFromCenter).abs() > 1);
+    double arcOutCourse;
+    double courseToOutPoint;
+    do {
+      currentArcPointCourseFromCenter += 1;
+      c = currentArcPointCourseFromCenter > 360
+          ? currentArcPointCourseFromCenter - 360
+          : currentArcPointCourseFromCenter;
+
+      LatLng point = _haversine.offset(center, radius, _bearingFromCourse(c));
+      arcPoints.add(point);
+
+      arcOutCourse = _turnToRight90(currentArcPointCourseFromCenter);
+      courseToOutPoint = normalizeBearing(Geodesy()
+          .bearingBetweenTwoGeoPoints(point, outCoursePoint)
+          .toDouble());
+    } while ((arcOutCourse - courseToOutPoint).abs() > 1);
 
     return arcPoints;
   }
+
+
 
   List<LatLng> fromPointToCourseToPoint({
     required LatLng startPoint,
