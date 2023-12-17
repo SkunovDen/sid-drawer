@@ -3,12 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:sidmap/data/sid_line_data.dart';
-import 'package:sidmap/data/test_data.dart';
 import 'package:sidmap/draws/arc/arcPoint.dart';
-import 'package:sidmap/draws/sid/sid_draw.dart';
 
-import './draws/runway/draw_runway.dart';
 import 'draws/arc/arc.dart';
 import 'draws/arc/new_arc.dart';
 
@@ -28,8 +24,8 @@ class TestMapWidget extends StatelessWidget {
     /// Testing functional ///
 
     void addTestDraw() {
-      final double arcStartCourse = 180;
-      final double arcEndCourse = 270;
+      final double arcStartCourse = 311;
+      final double arcEndCourse = 318;
       final double arcRadius = 4000;
       final bool clockWise = false;
 
@@ -42,7 +38,7 @@ class TestMapWidget extends StatelessWidget {
       Polyline arcTrue =
           Polyline(points: arcPoints1, color: Colors.red, strokeWidth: 5);
 
-      final List<LatLng> newArc = Arc.fromPointToCourse(
+      final List<LatLng> newArc = Arc().fromPointToCourse(
           startPoint: arcStartPoint,
           startCourse: arcStartCourse,
           outCourse: arcEndCourse,
