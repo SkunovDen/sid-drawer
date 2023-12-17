@@ -3,9 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:sidmap/draws/arc/arcPoint.dart';
 
-import 'draws/arc/arc.dart';
+
 import 'draws/arc/new_arc.dart';
 
 class TestMapWidget extends StatelessWidget {
@@ -28,15 +27,8 @@ class TestMapWidget extends StatelessWidget {
       final double arcEndCourse = 318;
       final double arcRadius = 4000;
       final bool clockWise = false;
+      const LatLng sPoint = LatLng(44.8, 36.9);
 
-      final ArcPoint start =
-          ArcPoint(coordinates: arcStartPoint, trueCourse: arcStartCourse);
-
-      List<LatLng> arcPoints1 =
-          arcFromPointToCourse(start, 4000, clockWise, arcEndCourse);
-
-      Polyline arcTrue =
-          Polyline(points: arcPoints1, color: Colors.red, strokeWidth: 5);
 
       final List<LatLng> newArc = Arc().fromPointToCourse(
           startPoint: arcStartPoint,
@@ -45,14 +37,18 @@ class TestMapWidget extends StatelessWidget {
           radius: arcRadius,
           isCw: clockWise);
 
-      const LatLng sPoint = LatLng(44.8, 36.9);
-      newArc.add(sPoint);
+      final List<LatLng> newArc2 = Arc().fromPointToCourseToPoint(
+          startPoint: arcStartPoint,
+          startCourse: arcStartCourse,
+          outCoursePoint: sPoint,
+          radius: arcRadius,
+          isCw: clockWise);
+
 
       Polyline newArcPoly =
-          Polyline(points: newArc, color: Colors.blue, strokeWidth: 5);
+          Polyline(points: newArc2, color: Colors.blue, strokeWidth: 5);
 
       polylinesList.add(newArcPoly);
-      // polylinesList.add(arcFalse);
     }
 
     /// Testing functional
