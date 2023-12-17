@@ -28,10 +28,10 @@ class TestMapWidget extends StatelessWidget {
     /// Testing functional ///
 
     void addTestDraw() {
-      final double arcStartCourse = 90;
-      final double arcEndCourse = 263;
+      final double arcStartCourse = 180;
+      final double arcEndCourse = 270;
       final double arcRadius = 4000;
-      final bool clockWise = true;
+      final bool clockWise = false;
 
       final ArcPoint start =
           ArcPoint(coordinates: arcStartPoint, trueCourse: arcStartCourse);

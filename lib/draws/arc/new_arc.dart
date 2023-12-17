@@ -71,7 +71,7 @@ class Arc {
     List<LatLng> arcPoints = [];
     log(
         name: 'NEW ARC',
-        '>>> Create ${isCw ? "CW" : "CCW"} ARC starts from $startPoint WITH course $startCourse; '
+        '>>> Create "CCW" ARC starts from $startPoint WITH course $startCourse; '
         'with radius $radius;'
         'out course $outCourse');
 
@@ -80,15 +80,15 @@ class Arc {
     LatLng center = _haversine.offset(
         startPoint, radius, bearingFromCourse(courseToCenter));
 
-    arcPoints.addAll([startPoint, center]);
-    return arcPoints;
+    // arcPoints.addAll([startPoint, center]);
+    // return arcPoints;
 
-    // CW
+    // CCW
     /// пеленг на стартовую точку
-    double arcStartCourseFromCenter = turnToLeft90(startCourse);
+    double arcStartCourseFromCenter = turnToRight90(startCourse);
 
     /// пеленг на конечную точку
-    double arcOutCourseFromCenter = turnToLeft90(outCourse);
+    double arcOutCourseFromCenter = turnToRight90(outCourse);
 
     log(
         name: 'NEW ARC',
@@ -96,14 +96,14 @@ class Arc {
     log(name: 'NEW ARC', '>>> курс на конечную точку $arcOutCourseFromCenter');
 
     // CW
-    // наращиваем  курс до совпадения с конечным
+    // уменьшаем  курс до совпадения с конечным
     // собираем точки дуги:
     double currentArcPointCourseFromCenter = arcStartCourseFromCenter;
     double c = 0;
     do {
-      currentArcPointCourseFromCenter += 1;
-      c = currentArcPointCourseFromCenter > 360
-          ? currentArcPointCourseFromCenter - 360
+      currentArcPointCourseFromCenter -= 1;
+      c = currentArcPointCourseFromCenter < 0
+          ? currentArcPointCourseFromCenter + 360
           : currentArcPointCourseFromCenter;
 
       LatLng point = _haversine.offset(center, radius, bearingFromCourse(c));
