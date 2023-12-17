@@ -10,47 +10,50 @@ import 'package:sidmap/draws/sid/sid_draw.dart';
 
 import './draws/runway/draw_runway.dart';
 import 'draws/arc/arc.dart';
+import 'draws/arc/new_arc.dart';
 
 class TestMapWidget extends StatelessWidget {
   const TestMapWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    var urkaRw04Thr = const LatLng(45.010463888889, 37.357916666667);
-    var urkaRw22Thr = const LatLng(44.993783, 37.336617);
+    const LatLng arcStartPoint = LatLng(45, 38);
 
-    List<Polyline> polylinesList = [];
-
-    polylinesList.add(getRw(urkaRw04Thr, urkaRw22Thr));
+    Polyline startLine = Polyline(
+        points: [const LatLng(45, 37), arcStartPoint],
+        color: Colors.green,
+        strokeWidth: 5);
+    List<Polyline> polylinesList = [startLine];
 
     /// Testing functional ///
 
     void addTestDraw() {
-      const LatLng arcStartPoint = LatLng(45, 38);
-      final double arcStartCourse = 10;
-      final double arcEndCourse = 130;
+      final double arcStartCourse = 89.5;
+      final double arcEndCourse = 280;
       final double arcRadius = 4000;
+      final bool clockWise = true;
 
       final ArcPoint start =
           ArcPoint(coordinates: arcStartPoint, trueCourse: arcStartCourse);
 
-      List<LatLng> arcPoints = arcFromPointToCourse(start, 4000, true, arcEndCourse);
-      Polyline arc = Polyline(
-          points: arcPoints,
-          color: Colors.blue,
-          strokeWidth: 5);
+      List<LatLng> arcPoints1 =
+          arcFromPointToCourse(start, 4000, clockWise, arcEndCourse);
 
-      Polyline startLine = Polyline(
-          points: [const LatLng(45, 37), arcStartPoint],
-          color: Colors.green,
-          strokeWidth: 5);
+      Polyline arcTrue =
+          Polyline(points: arcPoints1, color: Colors.red, strokeWidth: 5);
 
-      Polyline engLine = Polyline(
-          points: [const LatLng(45.1, 37.7), const LatLng(45.5, 37.7)],
-          color: Colors.green,
-          strokeWidth: 5);
+      final List<LatLng> newArc = Arc.fromPointToCourse(
+          startPoint: arcStartPoint,
+          startCourse: arcStartCourse,
+          outCourse: arcEndCourse,
+          radius: arcRadius,
+          isCw: clockWise);
 
-      polylinesList.addAll([startLine, arc]);
+      Polyline newArcPoly =
+          Polyline(points: newArc, color: Colors.blue, strokeWidth: 5);
+
+      polylinesList.add(newArcPoly);
+      // polylinesList.add(arcFalse);
     }
 
     /// Testing functional
@@ -60,7 +63,7 @@ class TestMapWidget extends StatelessWidget {
       children: [
         Container(
           width: 700,
-          height: 600,
+          height: 500,
           color: Colors.red,
           child: FlutterMap(
             options: const MapOptions(

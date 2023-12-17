@@ -13,27 +13,43 @@ List<LatLng> arcFromPointToCourse(
     ArcPoint startPoint, double radius, bool isClockWise, double endCourse) {
   List<LatLng> arcPoints = [];
 
-  if (isClockWise) {
-    double startCourse = startPoint.trueCourse;
+  // if (isClockWise) {
+    final LatLng startCoordinates = startPoint.coordinates;
+    final double startCourse = startPoint.trueCourse;
 
     // находим центр
-    double toCenterCourse = turnToRight90(startCourse);
-    final LatLng center = _haversine.offset(
-        startPoint.coordinates, radius, normalizeBearing(toCenterCourse));
-    // arcPoints.add(startPoint.coordinates);
+    double toCenterCourse;
 
-    // наращивая курс до достижения endCourse собираем точки дуги
-    double currentArcCourse = 0;
-    double arcDegrees = endCourse - startCourse;
-
-    while (currentArcCourse < arcDegrees) {
-      log('Current course: $currentArcCourse');
-      LatLng arcPoint = _haversine.offset(center, radius, currentArcCourse);
-      arcPoints.add(arcPoint);
-
-      currentArcCourse += 1;
+    double startAngle;
+    double endAngle;
+    if(isClockWise) {
+      toCenterCourse = turnToRight90(startCourse);
+      startAngle = turnToLeft90(startCourse);
+      endAngle = turnToLeft90(endCourse);
+    } else{
+      toCenterCourse = turnToLeft90(startCourse);
+      startAngle = turnToRight90(startCourse);
+      endAngle = turnToRight90(endCourse);
     }
-  } else {}
+    if(toCenterCourse > 180) toCenterCourse = toCenterCourse - 360;
+    LatLng center = _haversine.offset(
+        startCoordinates, radius, toCenterCourse);
+
+    List<LatLng> points = getSimpleArc(center, radius, startAngle, endAngle, true).arc.points;
+
+    arcPoints.addAll(points);
+    // наращивая курс до достижения endCourse собираем точки дуги
+    // double currentArcCourse = 0;
+    // double arcDegrees = endCourse - startCourse;
+    //
+    // while (currentArcCourse < arcDegrees) {
+    //   log('Current course: $currentArcCourse');
+    //   LatLng arcPoint = _haversine.offset(center, radius, currentArcCourse);
+    //   arcPoints.add(arcPoint);
+    //
+    //   currentArcCourse += 1;
+    // }
+  // } else {}
 
   return arcPoints;
 }
