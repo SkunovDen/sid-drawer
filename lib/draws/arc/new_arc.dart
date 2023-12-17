@@ -187,29 +187,29 @@ class Arc {
     LatLng center = _haversine.offset(
         startPoint, radius, _bearingFromCourse(courseToCenter));
 
-    return [startPoint,center];
+    // return [startPoint,center];
 
-    // CW
+    // CСW
     /// пеленг на стартовую точку
-    double arcStartCourseFromCenter = _turnToLeft90(startCourse);
+    double arcStartCourseFromCenter = _turnToRight90(startCourse);
 
-    // CW
-    // наращиваем курс до совпадения с курсом на заданую точку
+    // CСW
+    // уменьшаем курс до совпадения с курсом на заданую точку
     // собираем точки дуги:
     double currentArcPointCourseFromCenter = arcStartCourseFromCenter;
     double c = 0;
     double arcOutCourse;
     double courseToOutPoint;
     do {
-      currentArcPointCourseFromCenter += 1;
-      c = currentArcPointCourseFromCenter > 360
-          ? currentArcPointCourseFromCenter - 360
+      currentArcPointCourseFromCenter -= 1;
+      c = currentArcPointCourseFromCenter < 0
+          ? currentArcPointCourseFromCenter + 360
           : currentArcPointCourseFromCenter;
 
       LatLng point = _haversine.offset(center, radius, _bearingFromCourse(c));
       arcPoints.add(point);
 
-      arcOutCourse = _turnToRight90(currentArcPointCourseFromCenter);
+      arcOutCourse = _turnToLeft90(currentArcPointCourseFromCenter);
       courseToOutPoint = normalizeBearing(Geodesy()
           .bearingBetweenTwoGeoPoints(point, outCoursePoint)
           .toDouble());

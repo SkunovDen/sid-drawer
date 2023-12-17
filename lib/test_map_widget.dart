@@ -27,22 +27,49 @@ class TestMapWidget extends StatelessWidget {
       final double arcEndCourse = 318;
       final double arcRadius = 4000;
       final bool clockWise = false;
-      const LatLng sPoint = LatLng(45.8, 37);
+      const LatLng sPoint = LatLng(45.1, 37);
+      const LatLng sPoint1 = LatLng(46.1, 39);
+      const LatLng sPoint2 = LatLng(46.3, 37);
 
 
-      final List<LatLng> newArc2 = Arc().fromPointToCourseToPoint(
+      final List<LatLng> newArc1 = Arc().fromPointToCourseToPoint(
           startPoint: arcStartPoint,
           startCourse: arcStartCourse,
           outCoursePoint: sPoint,
           radius: arcRadius,
           isCw: clockWise);
 
-      newArc2.add(sPoint);
+      newArc1.add(sPoint);
 
-      Polyline newArcPoly =
+      final List<LatLng> newArc2 = Arc().fromPointToCourseToPoint(
+          startPoint: sPoint,
+          startCourse: 273,
+          outCoursePoint: sPoint1,
+          radius: arcRadius,
+          isCw: false);
+
+      newArc2.add(sPoint1);
+
+      final List<LatLng> newArc3 = Arc().fromPointToCourseToPoint(
+          startPoint: sPoint1,
+          startCourse: 50,
+          outCoursePoint: sPoint2,
+          radius: arcRadius,
+          isCw: false);
+
+      newArc3.add(sPoint2);
+
+
+      Polyline newArcPoly1 =
+          Polyline(points: newArc1, color: Colors.blue, strokeWidth: 5);
+      Polyline newArcPoly2 =
           Polyline(points: newArc2, color: Colors.blue, strokeWidth: 5);
+      Polyline newArcPoly3 =
+          Polyline(points: newArc3, color: Colors.blue, strokeWidth: 5);
 
-      polylinesList.add(newArcPoly);
+      polylinesList.add(newArcPoly1);
+      polylinesList.add(newArcPoly2);
+      polylinesList.add(newArcPoly3);
     }
 
     /// Testing functional
