@@ -124,4 +124,112 @@ class Arc {
 
     return res;
   }
+
+  List<LatLng> _fromPointToCourseToPointCW({
+    required LatLng startPoint,
+    required double startCourse,
+    required LatLng outCoursePoint,
+    required double radius,
+  }) {
+    List<LatLng> arcPoints = [];
+
+    // находим центр дуги
+    double courseToCenter = _turnToRight90(startCourse);
+    LatLng center = _haversine.offset(
+        startPoint, radius, _bearingFromCourse(courseToCenter));
+
+    // CW
+    /// пеленг на стартовую точку
+    /// пеленг на конечную точку
+    double arcStartCourseFromCenter = _turnToLeft90(startCourse);
+    double arcOutCourseFromCenter = _turnToLeft90(startCourse);
+
+    // CW
+    // наращиваем  курс до совпадения с конечным
+    // собираем точки дуги:
+    double currentArcPointCourseFromCenter = arcStartCourseFromCenter;
+    double c = 0;
+    do {
+      currentArcPointCourseFromCenter += 1;
+      c = currentArcPointCourseFromCenter > 360
+          ? currentArcPointCourseFromCenter - 360
+          : currentArcPointCourseFromCenter;
+
+      LatLng point =
+      _haversine.offset(center, radius, _bearingFromCourse(c));
+      arcPoints.add(point);
+    } while ((c - arcOutCourseFromCenter).abs() > 1);
+
+    return arcPoints;
+  }
+
+  List<LatLng> _fromPointToCourseToPointCCW({
+    required LatLng startPoint,
+    required double startCourse,
+    required LatLng outCoursePoint,
+    required double radius,
+  }) {
+    List<LatLng> arcPoints = [];
+
+    // находим центр дуги
+    double courseToCenter = _turnToLeft90(startCourse);
+    LatLng center = _haversine.offset(
+        startPoint, radius, _bearingFromCourse(courseToCenter));
+
+    // CCW
+    /// пеленг на стартовую точку
+    /// пеленг на конечную точку
+    double arcStartCourseFromCenter = _turnToRight90(startCourse);
+    double arcOutCourseFromCenter = _turnToRight90(startCourse);
+
+    // CW
+    // уменьшаем  курс до совпадения с конечным
+    // собираем точки дуги:
+    double currentArcPointCourseFromCenter = arcStartCourseFromCenter;
+    double c = 0;
+    do {
+      currentArcPointCourseFromCenter -= 1;
+      c = currentArcPointCourseFromCenter < 0
+          ? currentArcPointCourseFromCenter + 360
+          : currentArcPointCourseFromCenter;
+
+      LatLng point =
+      _haversine.offset(center, radius, _bearingFromCourse(c));
+      arcPoints.add(point);
+    } while ((c - arcOutCourseFromCenter).abs() > 1);
+
+    return arcPoints;
+  }
+
+  List<LatLng> fromPointToCourseToPoint({
+    required LatLng startPoint,
+    required double startCourse,
+    required LatLng outCoursePoint,
+    required double radius,
+    required bool isCw,
+  }) {
+    List<LatLng> res = [];
+
+// ClockWise
+    if (isCw) {
+      res = _fromPointToCourseToPointCW(
+        startPoint: startPoint,
+        startCourse: startCourse,
+        outCoursePoint: outCoursePoint,
+        radius: radius,
+      );
+    } else
+// Counter-ClockWise
+    if (!isCw) {
+      res = _fromPointToCourseToPointCCW(
+        startPoint: startPoint,
+        startCourse: startCourse,
+        outCoursePoint: outCoursePoint,
+        radius: radius,
+      );
+    }
+
+    return res;
+  }
+
 }
