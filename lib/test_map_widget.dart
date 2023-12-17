@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
-
 import 'draws/arc/new_arc.dart';
 
 class TestMapWidget extends StatelessWidget {

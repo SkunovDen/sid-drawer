@@ -1,5 +1,3 @@
-import 'dart:developer' as dev;
-
 import 'package:geodesy/geodesy.dart';
 
 class Arc {
