@@ -1,4 +1,6 @@
-import 'package:latlong2/latlong.dart';
+import 'dart:developer' as dev;
+
+import 'package:geodesy/geodesy.dart';
 
 class Arc {
   final _haversine = const Haversine();
@@ -16,7 +18,6 @@ class Arc {
     double t = currentCourse + 90.0;
     return t > 360 ? t - 360 : t;
   }
-
 
   List<LatLng> _fromPointToCourseCW({
     required LatLng startPoint,
@@ -48,8 +49,7 @@ class Arc {
           ? currentArcPointCourseFromCenter - 360
           : currentArcPointCourseFromCenter;
 
-      LatLng point =
-          _haversine.offset(center, radius, _bearingFromCourse(c));
+      LatLng point = _haversine.offset(center, radius, _bearingFromCourse(c));
       arcPoints.add(point);
     } while ((c - arcOutCourseFromCenter).abs() > 1);
 
@@ -86,8 +86,7 @@ class Arc {
           ? currentArcPointCourseFromCenter + 360
           : currentArcPointCourseFromCenter;
 
-      LatLng point =
-          _haversine.offset(center, radius, _bearingFromCourse(c));
+      LatLng point = _haversine.offset(center, radius, _bearingFromCourse(c));
       arcPoints.add(point);
     } while ((c - arcOutCourseFromCenter).abs() > 1);
 
@@ -131,12 +130,17 @@ class Arc {
     required LatLng outCoursePoint,
     required double radius,
   }) {
+    dev.log(
+        name: '[ fromPointToCourseToPoint ]',
+        'create CW Arc from $startPoint to course $outCoursePoint');
     List<LatLng> arcPoints = [];
 
     // находим центр дуги
     double courseToCenter = _turnToRight90(startCourse);
     LatLng center = _haversine.offset(
         startPoint, radius, _bearingFromCourse(courseToCenter));
+
+    // return [startPoint,center];
 
     // CW
     /// пеленг на стартовую точку
@@ -147,16 +151,22 @@ class Arc {
     // собираем точки дуги:
     double currentArcPointCourseFromCenter = arcStartCourseFromCenter;
     double c = 0;
-    // do {
-    //   currentArcPointCourseFromCenter += 1;
-    //   c = currentArcPointCourseFromCenter > 360
-    //       ? currentArcPointCourseFromCenter - 360
-    //       : currentArcPointCourseFromCenter;
-    //
-    //   LatLng point =
-    //   _haversine.offset(center, radius, _bearingFromCourse(c));
-    //   arcPoints.add(point);
-    // } while ((c - arcOutCourseFromCenter).abs() > 1);
+    double arcOutCourse;
+    double courseToOutPoint;
+    do {
+      currentArcPointCourseFromCenter += 1;
+      c = currentArcPointCourseFromCenter > 360
+          ? currentArcPointCourseFromCenter - 360
+          : currentArcPointCourseFromCenter;
+
+      LatLng point = _haversine.offset(center, radius, _bearingFromCourse(c));
+      arcPoints.add(point);
+
+      arcOutCourse = _turnToRight90(currentArcPointCourseFromCenter);
+      courseToOutPoint = normalizeBearing(Geodesy()
+          .bearingBetweenTwoGeoPoints(point, outCoursePoint)
+          .toDouble());
+    } while ((arcOutCourse - courseToOutPoint).abs() > 1);
 
     return arcPoints;
   }
@@ -228,5 +238,4 @@ class Arc {
 
     return res;
   }
-
 }
