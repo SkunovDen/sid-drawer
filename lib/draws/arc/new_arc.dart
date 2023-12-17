@@ -26,8 +26,8 @@ class Arc {
 
 
 
-arcPoints.addAll([startPoint, center]);
-return arcPoints;
+// arcPoints.addAll([startPoint, center]);
+// return arcPoints;
 
     // CW
     /// пеленг на стартовую точку

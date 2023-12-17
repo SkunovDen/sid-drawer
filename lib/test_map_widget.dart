@@ -29,7 +29,7 @@ class TestMapWidget extends StatelessWidget {
 
     void addTestDraw() {
       final double arcStartCourse = 90;
-      final double arcEndCourse = 270;
+      final double arcEndCourse = 263;
       final double arcRadius = 4000;
       final bool clockWise = true;
 
@@ -49,8 +49,8 @@ class TestMapWidget extends StatelessWidget {
           radius: arcRadius,
           isCw: clockWise);
 
-      // const LatLng sPoint = LatLng(44.8, 36.9);
-      // newArc.add(sPoint);
+      const LatLng sPoint = LatLng(44.8, 36.9);
+      newArc.add(sPoint);
 
       Polyline newArcPoly =
           Polyline(points: newArc, color: Colors.blue, strokeWidth: 5);
