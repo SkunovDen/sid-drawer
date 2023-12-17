@@ -130,9 +130,6 @@ class Arc {
     required LatLng outCoursePoint,
     required double radius,
   }) {
-    dev.log(
-        name: '[ fromPointToCourseToPoint ]',
-        'create CW Arc from $startPoint to course $outCoursePoint');
     List<LatLng> arcPoints = [];
 
     // находим центр дуги
@@ -177,17 +174,12 @@ class Arc {
     required LatLng outCoursePoint,
     required double radius,
   }) {
-    dev.log(
-        name: '[ fromPointToCourseToPoint ]',
-        'create CCW Arc from $startPoint to course $outCoursePoint');
     List<LatLng> arcPoints = [];
 
     // находим центр дуги
     double courseToCenter = _turnToLeft90(startCourse);
     LatLng center = _haversine.offset(
         startPoint, radius, _bearingFromCourse(courseToCenter));
-
-    // return [startPoint,center];
 
     // CСW
     /// пеленг на стартовую точку
