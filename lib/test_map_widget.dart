@@ -3,8 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:sidmap/draws/arc/arc_helpers.dart';
 
 import 'draws/arc/new_arc.dart';
+import 'dart:math';
 
 class TestMapWidget extends StatelessWidget {
   const TestMapWidget({super.key});
@@ -22,53 +24,40 @@ class TestMapWidget extends StatelessWidget {
     /// Testing functional ///
 
     void addTestDraw() {
-      final double arcStartCourse = 90;
-      final double arcEndCourse = 318;
-      final double arcRadius = 4000;
-      final bool clockWise = false;
+      final random = Random();
+
+      const double arcStartCourse = 270;
+      const double arcEndCourse = 318;
+      const double arcRadius = 3500;
+      const bool clockWise = true;
       const LatLng sPoint = LatLng(45.1, 37);
+      const LatLng sArkPoint = LatLng(45.1, 37.1);
+      const LatLng toArkPoint = LatLng(45.2, 37);
+
       const LatLng sPoint1 = LatLng(46.1, 39);
       const LatLng sPoint2 = LatLng(46.3, 37);
 
+      // final List<LatLng> newArc = Arc().fromPointToCourse(
+      //     startPoint: sArkPoint,
+      //     startCourse: 90,
+      //     // outCoursePoint: sPoint2,
+      //     outCourse: 55,
+      //     radius: 4000,
+      //     isCw: !clockWise, );
 
-      final List<LatLng> newArc1 = Arc().fromPointToCourseToPoint(
-          startPoint: arcStartPoint,
-          startCourse: arcStartCourse,
-          outCoursePoint: sPoint,
-          radius: arcRadius,
-          isCw: clockWise);
-
-      newArc1.add(sPoint);
-
-      final List<LatLng> newArc2 = Arc().fromPointToCourseToPoint(
-          startPoint: sPoint,
-          startCourse: 273,
-          outCoursePoint: sPoint1,
-          radius: arcRadius,
-          isCw: false);
-
-      newArc2.add(sPoint1);
-
-      final List<LatLng> newArc3 = Arc().fromPointToCourseToPoint(
-          startPoint: sPoint1,
-          startCourse: 50,
-          outCoursePoint: sPoint2,
-          radius: arcRadius,
-          isCw: false);
-
-      newArc3.add(sPoint2);
+      final List<LatLng> newArcToPoint = Arc().fromPointToCourseToPoint(
+        startPoint: sPoint,
+        startCourse: arcStartCourse,
+        outCoursePoint: toArkPoint,
+        // outCourse: 55,
+        radius: arcRadius,
+        isCw: clockWise, );
 
 
-      Polyline newArcPoly1 =
-          Polyline(points: newArc1, color: Colors.blue, strokeWidth: 5);
-      Polyline newArcPoly2 =
-          Polyline(points: newArc2, color: Colors.blue, strokeWidth: 5);
-      Polyline newArcPoly3 =
-          Polyline(points: newArc3, color: Colors.blue, strokeWidth: 5);
+      Polyline newArcPoly1 = Polyline(
+          points: [sArkPoint,sPoint, ...newArcToPoint, toArkPoint], color: Colors.blue, strokeWidth: 5);
 
       polylinesList.add(newArcPoly1);
-      polylinesList.add(newArcPoly2);
-      polylinesList.add(newArcPoly3);
     }
 
     /// Testing functional

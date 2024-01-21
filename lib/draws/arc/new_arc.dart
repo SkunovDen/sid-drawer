@@ -8,12 +8,12 @@ class Arc {
   }
 
   double _turnToLeft90(double currentCourse) {
-    double t = currentCourse - 90.0;
+    final double t = currentCourse - 90.0;
     return t < 0 ? 360 + t : t;
   }
 
   double _turnToRight90(double currentCourse) {
-    double t = currentCourse + 90.0;
+    final double t = currentCourse + 90.0;
     return t > 360 ? t - 360 : t;
   }
 
@@ -23,18 +23,18 @@ class Arc {
     required double outCourse,
     required double radius,
   }) {
-    List<LatLng> arcPoints = [];
+    final List<LatLng> arcPoints = [];
 
     // находим центр дуги
-    double courseToCenter = _turnToRight90(startCourse);
-    LatLng center = _haversine.offset(
+    final double courseToCenter = _turnToRight90(startCourse);
+    final LatLng center = _haversine.offset(
         startPoint, radius, _bearingFromCourse(courseToCenter));
 
     // CW
     /// пеленг на стартовую точку
     /// пеленг на конечную точку
-    double arcStartCourseFromCenter = _turnToLeft90(startCourse);
-    double arcOutCourseFromCenter = _turnToLeft90(outCourse);
+    final double arcStartCourseFromCenter = _turnToLeft90(startCourse);
+    final double arcOutCourseFromCenter = _turnToLeft90(outCourse);
 
     // CW
     // наращиваем  курс до совпадения с конечным
@@ -47,7 +47,7 @@ class Arc {
           ? currentArcPointCourseFromCenter - 360
           : currentArcPointCourseFromCenter;
 
-      LatLng point = _haversine.offset(center, radius, _bearingFromCourse(c));
+      final LatLng point = _haversine.offset(center, radius, _bearingFromCourse(c));
       arcPoints.add(point);
     } while ((c - arcOutCourseFromCenter).abs() > 1);
 
@@ -60,18 +60,18 @@ class Arc {
     required double outCourse,
     required double radius,
   }) {
-    List<LatLng> arcPoints = [];
+    final List<LatLng> arcPoints = [];
 
     // находим центр дуги
-    double courseToCenter = _turnToLeft90(startCourse);
-    LatLng center = _haversine.offset(
+    final double courseToCenter = _turnToLeft90(startCourse);
+    final LatLng center = _haversine.offset(
         startPoint, radius, _bearingFromCourse(courseToCenter));
 
     // CCW
     /// пеленг на стартовую точку
     /// пеленг на конечную точку
-    double arcStartCourseFromCenter = _turnToRight90(startCourse);
-    double arcOutCourseFromCenter = _turnToRight90(outCourse);
+    final double arcStartCourseFromCenter = _turnToRight90(startCourse);
+    final double arcOutCourseFromCenter = _turnToRight90(outCourse);
 
     // CW
     // уменьшаем  курс до совпадения с конечным
@@ -84,7 +84,7 @@ class Arc {
           ? currentArcPointCourseFromCenter + 360
           : currentArcPointCourseFromCenter;
 
-      LatLng point = _haversine.offset(center, radius, _bearingFromCourse(c));
+      final LatLng point = _haversine.offset(center, radius, _bearingFromCourse(c));
       arcPoints.add(point);
     } while ((c - arcOutCourseFromCenter).abs() > 1);
 
@@ -128,18 +128,18 @@ class Arc {
     required LatLng outCoursePoint,
     required double radius,
   }) {
-    List<LatLng> arcPoints = [];
+    final List<LatLng> arcPoints = [];
 
     // находим центр дуги
-    double courseToCenter = _turnToRight90(startCourse);
-    LatLng center = _haversine.offset(
+    final double courseToCenter = _turnToRight90(startCourse);
+    final LatLng center = _haversine.offset(
         startPoint, radius, _bearingFromCourse(courseToCenter));
 
     // return [startPoint,center];
 
     // CW
     /// пеленг на стартовую точку
-    double arcStartCourseFromCenter = _turnToLeft90(startCourse);
+    final double arcStartCourseFromCenter = _turnToLeft90(startCourse);
 
     // CW
     // наращиваем курс до совпадения с курсом на заданую точку
@@ -154,7 +154,7 @@ class Arc {
           ? currentArcPointCourseFromCenter - 360
           : currentArcPointCourseFromCenter;
 
-      LatLng point = _haversine.offset(center, radius, _bearingFromCourse(c));
+      final LatLng point = _haversine.offset(center, radius, _bearingFromCourse(c));
       arcPoints.add(point);
 
       arcOutCourse = _turnToRight90(currentArcPointCourseFromCenter);
@@ -172,16 +172,16 @@ class Arc {
     required LatLng outCoursePoint,
     required double radius,
   }) {
-    List<LatLng> arcPoints = [];
+    final List<LatLng> arcPoints = [];
 
     // находим центр дуги
-    double courseToCenter = _turnToLeft90(startCourse);
-    LatLng center = _haversine.offset(
+    final double courseToCenter = _turnToLeft90(startCourse);
+    final LatLng center = _haversine.offset(
         startPoint, radius, _bearingFromCourse(courseToCenter));
 
     // CСW
     /// пеленг на стартовую точку
-    double arcStartCourseFromCenter = _turnToRight90(startCourse);
+    final double arcStartCourseFromCenter = _turnToRight90(startCourse);
 
     // CСW
     // уменьшаем курс до совпадения с курсом на заданую точку
@@ -196,7 +196,7 @@ class Arc {
           ? currentArcPointCourseFromCenter + 360
           : currentArcPointCourseFromCenter;
 
-      LatLng point = _haversine.offset(center, radius, _bearingFromCourse(c));
+      final LatLng point = _haversine.offset(center, radius, _bearingFromCourse(c));
       arcPoints.add(point);
 
       arcOutCourse = _turnToLeft90(currentArcPointCourseFromCenter);
