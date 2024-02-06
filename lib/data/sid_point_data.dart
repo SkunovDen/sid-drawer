@@ -1,9 +1,13 @@
 import 'package:latlong2/latlong.dart';
 
 class SidPointData{
-  LatLng point;
-  bool isFlyOver;
-  String pointType;
+  final LatLng point;
+  final bool isFlyOver;
 
-  SidPointData(this.point, this.isFlyOver, this.pointType);
+  SidPointData({ required this.point, required this.isFlyOver });
+
+  @override
+  String toString() {
+    return 'SidPointData{point: $point, isFlyOver: $isFlyOver}';
+  }
 }
