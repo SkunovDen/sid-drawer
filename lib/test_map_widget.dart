@@ -51,9 +51,9 @@ class TestMapWidget extends StatelessWidget {
     void testArc() {
       final List<LatLng> arc = ArcNew()
           .from(arcStartPoint)
-          .withStartCourse(90)
-          .toEndCourse(280)
-          .withRadius(3500)
+          .withStartCourse(50)
+          .toEndCourse(10)
+          .withRadius(4500)
           .clockWise();
       Polyline newArcPoly1 =
           Polyline(points: [...arc], color: Colors.blue, strokeWidth: 5);

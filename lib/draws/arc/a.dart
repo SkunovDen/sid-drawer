@@ -42,6 +42,8 @@ class ArcNew {
 
 
   List<LatLng> cwArcCreate(){
+    List<LatLng> arcPointsList = [startPoint];
+
     // определим размер угла арки в градусах
     // = количество сегментов
     double arcAngle;
@@ -64,6 +66,17 @@ class ArcNew {
     if(courseToEndFromCenter > 180) courseToEndFromCenter -= 360.0;
     LatLng endPoint = const Haversine().offset(arcCenter, radius, courseToEndFromCenter);
 
-    return[startPoint, arcCenter, endPoint];
+    double angleFromCenterToArcPoint = turnToLeft90(startCourse);
+
+    for(int i = 0; i < arcAngle; i++){
+      if(angleFromCenterToArcPoint > 180) angleFromCenterToArcPoint -= 360.0;
+
+      LatLng arcPoint = const Haversine().offset(arcCenter, radius, angleFromCenterToArcPoint);
+      arcPointsList.add(arcPoint);
+      angleFromCenterToArcPoint += 1.0;
+    }
+
+
+    return[...arcPointsList, endPoint];
   }
 }
