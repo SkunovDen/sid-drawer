@@ -1,13 +1,10 @@
-// ignore_for_file: non_constant_identifier_names, unused_local_variable
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
 import 'draws/arc/a.dart';
-import 'draws/arc/new_arc.dart';
-import 'dart:math';
-
 import 'draws/cut_angle.dart';
 
 class TestMapWidget extends StatelessWidget {
@@ -19,40 +16,48 @@ class TestMapWidget extends StatelessWidget {
     const LatLng arcEndPoint = LatLng(45.5, 40);
     const LatLng arcCrossPoint = LatLng(45, 39);
 
-    Polyline startLine = Polyline(
-        points: [arcStartPoint, LatLng(arcStartPoint.latitude, arcStartPoint.longitude - 0.5)],
-        color: Colors.green,
-        strokeWidth: 5);
-    Polyline endLine = Polyline(
-        points: [arcEndPoint, LatLng(arcEndPoint.latitude + 0.5, arcEndPoint.longitude)],
-        color: Colors.green,
-        strokeWidth: 5);
+    Polyline startLine = Polyline(points: [
+      arcStartPoint,
+      LatLng(arcStartPoint.latitude, arcStartPoint.longitude - 0.5)
+    ], color: Colors.green, strokeWidth: 5);
+    Polyline endLine = Polyline(points: [
+      arcEndPoint,
+      LatLng(arcEndPoint.latitude + 0.5, arcEndPoint.longitude)
+    ], color: Colors.green, strokeWidth: 5);
     List<Polyline> polylinesList = [startLine, endLine];
 
     /// Testing functional ///
 
     void addTestDraw() {
-      final random = Random();
-
 
       Polyline newArcPoly1 = Polyline(
-          points: [arcStartPoint, arcCrossPoint, arcEndPoint], color: Colors.blue, strokeWidth: 5);
+          points: [arcStartPoint, arcCrossPoint, arcEndPoint],
+          color: Colors.blue,
+          strokeWidth: 5);
 
       polylinesList.add(newArcPoly1);
     }
 
     void testFunc() {
-      final List<LatLng> cut = cutAngle(arcStartPoint, arcCrossPoint,arcEndPoint);
+      final List<LatLng> cut =
+          cutAngle(arcStartPoint, arcCrossPoint, arcEndPoint);
 
-      Polyline newArcPoly1 = Polyline(
-          points: [...cut], color: Colors.red, strokeWidth: 5);
+      Polyline newArcPoly1 =
+          Polyline(points: [...cut], color: Colors.red, strokeWidth: 5);
 
       polylinesList.add(newArcPoly1);
     }
 
     void testArc() {
-      final List<LatLng> arc = ArcNew().from(arcStartPoint).to(arcEndPoint).withRadius(3500).clockWise();
-      // polylinesList.add(newArcPoly1);
+      final List<LatLng> arc = ArcNew()
+          .from(arcStartPoint)
+          .withStartCourse(95)
+          .toEndCourse(340)
+          .withRadius(3500)
+          .clockWise();
+      Polyline newArcPoly1 =
+          Polyline(points: [...arc], color: Colors.blue, strokeWidth: 5);
+      polylinesList.add(newArcPoly1);
     }
 
     /// Testing functional
@@ -103,7 +108,6 @@ class TestMapWidget extends StatelessWidget {
                   },
                   child: const Text('TEST DRAW')),
             ),
-
             Padding(
               padding: const EdgeInsets.all(2),
               child: ElevatedButton(
@@ -121,7 +125,6 @@ class TestMapWidget extends StatelessWidget {
                   },
                   child: const Text('TEST FUNC')),
             ),
-
             Padding(
               padding: const EdgeInsets.all(2),
               child: ElevatedButton(
@@ -139,7 +142,6 @@ class TestMapWidget extends StatelessWidget {
                   },
                   child: const Text('TEST ARC')),
             ),
-
           ],
         )
       ],
