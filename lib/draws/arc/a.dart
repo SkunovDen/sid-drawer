@@ -32,12 +32,11 @@ class ArcNew {
   }
 
   List<LatLng> clockWise() {
-    cwArcCreate();
     return  cwArcCreate();
-    //   <LatLng>[
-    //   startPoint,
-    //   LatLng(startPoint.latitude + 0.1, startPoint.longitude + 0.1)
-    // ];
+  }
+
+  List<LatLng> counterClockWise() {
+    return  counterCwArcCreate();
   }
 
 
@@ -53,14 +52,10 @@ class ArcNew {
       arcAngle = 360 - startCourse + endCourse;
     }
 
-    debugPrint('Угол дуги = $arcAngle');
-
     // центр дуги
     double courseToArcCenter = turnToRight90(startCourse);
     if(courseToArcCenter > 180) courseToArcCenter -= 360.0;
     LatLng arcCenter = const Haversine().offset(startPoint, radius, courseToArcCenter);
-    debugPrint('Центр дуги = $arcCenter');
-
 
     double courseToEndFromCenter = turnToLeft90(endCourse);
     if(courseToEndFromCenter > 180) courseToEndFromCenter -= 360.0;
@@ -74,6 +69,41 @@ class ArcNew {
       LatLng arcPoint = const Haversine().offset(arcCenter, radius, angleFromCenterToArcPoint);
       arcPointsList.add(arcPoint);
       angleFromCenterToArcPoint += 1.0;
+    }
+
+
+    return[...arcPointsList, endPoint];
+  }
+
+  List<LatLng> counterCwArcCreate(){
+    List<LatLng> arcPointsList = [startPoint];
+
+    // определим размер угла арки в градусах
+    // = количество сегментов
+    double arcAngle;
+    if(startCourse > endCourse){
+      arcAngle = startCourse - endCourse;
+    } else {
+      arcAngle = 360 - endCourse + startCourse;
+    }
+
+    // центр дуги
+    double courseToArcCenter = turnToLeft90(startCourse);
+    if(courseToArcCenter > 180) courseToArcCenter -= 360.0;
+    LatLng arcCenter = const Haversine().offset(startPoint, radius, courseToArcCenter);
+
+    double courseToEndFromCenter = turnToRight90(endCourse);
+    if(courseToEndFromCenter > 180) courseToEndFromCenter -= 360.0;
+    LatLng endPoint = const Haversine().offset(arcCenter, radius, courseToEndFromCenter);
+
+    double angleFromCenterToArcPoint = turnToRight90(startCourse);
+
+    for(int i = 0; i < arcAngle; i++){
+      if(angleFromCenterToArcPoint < -180) angleFromCenterToArcPoint += 360.0;
+
+      LatLng arcPoint = const Haversine().offset(arcCenter, radius, angleFromCenterToArcPoint);
+      arcPointsList.add(arcPoint);
+      angleFromCenterToArcPoint -= 1.0;
     }
 
 
