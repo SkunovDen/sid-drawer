@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:geodesy/geodesy.dart';
+import 'package:sidmap/draws/arc/arc_helpers.dart';
 
 class ArcNew {
   late final LatLng startPoint;
@@ -32,14 +33,15 @@ class ArcNew {
 
   List<LatLng> clockWise() {
     cwArcCreate();
-    return <LatLng>[
-      startPoint,
-      LatLng(startPoint.latitude + 0.1, startPoint.longitude + 0.1)
-    ];
+    return  cwArcCreate();
+    //   <LatLng>[
+    //   startPoint,
+    //   LatLng(startPoint.latitude + 0.1, startPoint.longitude + 0.1)
+    // ];
   }
 
 
-  void cwArcCreate(){
+  List<LatLng> cwArcCreate(){
     // определим размер угла арки в градусах
     // = количество сегментов
     double arcAngle;
@@ -50,5 +52,18 @@ class ArcNew {
     }
 
     debugPrint('Угол дуги = $arcAngle');
+
+    // центр дуги
+    double courseToArcCenter = turnToRight90(startCourse);
+    if(courseToArcCenter > 180) courseToArcCenter -= 360.0;
+    LatLng arcCenter = const Haversine().offset(startPoint, radius, courseToArcCenter);
+    debugPrint('Центр дуги = $arcCenter');
+
+
+    double courseToEndFromCenter = turnToLeft90(endCourse);
+    if(courseToEndFromCenter > 180) courseToEndFromCenter -= 360.0;
+    LatLng endPoint = const Haversine().offset(arcCenter, radius, courseToEndFromCenter);
+
+    return[startPoint, arcCenter, endPoint];
   }
 }
