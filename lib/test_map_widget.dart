@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
+import 'draws/arc/a.dart';
 import 'draws/arc/new_arc.dart';
 import 'dart:math';
 
@@ -47,6 +48,11 @@ class TestMapWidget extends StatelessWidget {
           points: [...cut], color: Colors.red, strokeWidth: 5);
 
       polylinesList.add(newArcPoly1);
+    }
+
+    void testArc() {
+      final List<LatLng> arc = ArcNew().from(arcStartPoint).to(arcEndPoint).withRadius(3500).clockWise();
+      // polylinesList.add(newArcPoly1);
     }
 
     /// Testing functional
@@ -114,6 +120,24 @@ class TestMapWidget extends StatelessWidget {
                     testFunc();
                   },
                   child: const Text('TEST FUNC')),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(2),
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.green,
+                    shadowColor: Colors.greenAccent,
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(2.0)),
+                    minimumSize: const Size(200, 50),
+                  ),
+                  onPressed: () {
+                    testArc();
+                  },
+                  child: const Text('TEST ARC')),
             ),
 
           ],
