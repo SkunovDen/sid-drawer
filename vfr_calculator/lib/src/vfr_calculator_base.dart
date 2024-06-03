@@ -1,4 +1,3 @@
-import 'package:latlong2/latlong.dart';
 import 'package:geodesy/geodesy.dart';
 
 List<LatLng> vfrTurnsCalc(LatLng thr1, LatLng thr2, String direction) {
