@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:vfr_calculator/vfr_calculator.dart';
 
 import 'draws/arc/a.dart';
 import 'draws/cut_angle.dart';
@@ -22,18 +23,29 @@ class TestMapWidget extends StatelessWidget {
       arcEndPoint,
       LatLng(arcEndPoint.latitude + 0.5, arcEndPoint.longitude)
     ], color: Colors.green, strokeWidth: 5);
-    List<Polyline> polylinesList = [startLine, endLine];
+    List<Polyline> polyLinesList = [startLine, endLine];
 
     /// Testing functional ///
 
     void addTestDraw() {
+      print('addTestDraw');
+      const LatLng thr1 = LatLng(45.012, 37.355);
+      const LatLng thr2 = LatLng(45.022, 37.35);
+      const String direction = 'R';
 
+      final List<LatLng> turns = vfrTurnsCalc(thr1, thr2, direction);
+
+
+
+
+      const LatLng arcStartPointG = LatLng(5, 5);
+      const LatLng arcEndPointG = LatLng(5, 175);
       Polyline newArcPoly1 = Polyline(
-          points: [arcStartPoint, arcCrossPoint, arcEndPoint],
+          points: [...turns],
           color: Colors.blue,
           strokeWidth: 5);
 
-      polylinesList.add(newArcPoly1);
+      polyLinesList.add(newArcPoly1);
     }
 
     void testFunc() {
@@ -43,7 +55,7 @@ class TestMapWidget extends StatelessWidget {
       Polyline newArcPoly1 =
           Polyline(points: [...cut], color: Colors.red, strokeWidth: 5);
 
-      polylinesList.add(newArcPoly1);
+      polyLinesList.add(newArcPoly1);
     }
 
     void testArc() {
@@ -55,7 +67,7 @@ class TestMapWidget extends StatelessWidget {
           .clockWise();
       Polyline newArcPoly1 =
           Polyline(points: [...arc], color: Colors.blue, strokeWidth: 5);
-      polylinesList.add(newArcPoly1);
+      polyLinesList.add(newArcPoly1);
     }
 
     /// Testing functional
@@ -80,7 +92,7 @@ class TestMapWidget extends StatelessWidget {
                 userAgentPackageName: 'com.example.app',
               ),
               PolylineLayer(
-                polylines: polylinesList,
+                polylines: polyLinesList,
               ),
             ],
           ),
