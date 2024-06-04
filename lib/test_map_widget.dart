@@ -29,21 +29,17 @@ class TestMapWidget extends StatelessWidget {
 
     void addTestDraw() {
       print('addTestDraw');
-      const LatLng thr1 = LatLng(45.012, 37.355);
-      const LatLng thr2 = LatLng(45.022, 37.35);
+      const LatLng thr1 = LatLng(45.0, 37.355);
+      const LatLng thr2 = LatLng(45.015, 37.346);
       const String direction = 'R';
 
-      final List<LatLng> turns = vfrTurnsCalc(thr1, thr2, direction);
+      final List<LatLng> turns = vfrTurnsCalc(
+          threshold1: thr1, threshold2: thr2, direction: direction);
 
+      debugPrint('vfrTurnsCalc : $turns');
 
-
-
-      const LatLng arcStartPointG = LatLng(5, 5);
-      const LatLng arcEndPointG = LatLng(5, 175);
-      Polyline newArcPoly1 = Polyline(
-          points: [...turns],
-          color: Colors.blue,
-          strokeWidth: 5);
+      Polyline newArcPoly1 =
+          Polyline(points: [...turns], color: Colors.blue, strokeWidth: 5);
 
       polyLinesList.add(newArcPoly1);
     }

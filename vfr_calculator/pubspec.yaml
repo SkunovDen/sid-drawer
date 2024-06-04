@@ -6,7 +6,6 @@ version: 1.0.0
 environment:
   sdk: ^3.4.0
 
-# Add regular dependencies here.
 dependencies:
   latlong2: ^0.9.1
   geodesy: ^0.10.2
